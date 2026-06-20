@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>CS Degree</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
+  import {
+    getFirestore, doc, getDoc, setDoc
+  } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGZaWdoD-j80fbGUlAfJNmp-05KwITfDU",
+    authDomain: "cs-degree-66d37.firebaseapp.com",
+    projectId: "cs-degree-66d37",
+    storageBucket: "cs-degree-66d37.firebasestorage.app",
+    messagingSenderId: "214094806777",
+    appId: "1:214094806777:web:3606a9df8ed2f9942a2c28",
+    measurementId: "G-V7T89YZJ4F"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  try{ getAnalytics(fbApp); }catch(e){ console.warn('Analytics unavailable:', e); }
+  const db = getFirestore(fbApp);
+
+  // Expose a small bridge so the main (non-module) script can read/write Firestore
+  // while keeping all of its existing synchronous logic untouched.
+  window.__csdFirebase = {
+    db,
+    async getDoc(collection, id){
+      try{
+        const snap = await getDoc(doc(db, collection, id));
+        return snap.exists() ? snap.data().value : undefined;
+      }catch(e){
+        console.error('Firestore read failed:', e);
+        return undefined;
+      }
+    },
+    async setDoc(collection, id, value){
+      try{
+        await setDoc(doc(db, collection, id), { value });
+      }catch(e){
+        console.error('Firestore write failed:', e);
+      }
+    }
+  };
+  // Signal readiness to the main script
+  window.dispatchEvent(new Event('csd-firebase-ready'));
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root{
+  --navy-950:#070f1f;
+  --navy-900:#0b1b33;
+  --navy-800:#122544;
+  --navy-700:#1a3358;
+  --gold-500:#c9a24b;
+  --gold-400:#dbb86b;
+  --gold-300:#e8cf94;
+  --cream-50:#fdfbf6;
+  --cream-100:#f5f0e6;
+  --emerald-700:#1f4d3a;
+  --emerald-500:#2c6e4f;
+  --ink-900:#101622;
+  --red-600:#b3432f;
+  --shadow-deep: 0 30px 60px -20px rgba(7,15,31,0.55);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Vazirmatn', sans-serif;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(201,162,75,0.12), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(44,110,79,0.10), transparent 55%),
+    var(--navy-950);
+  color:var(--cream-100);
+  min-height:100%;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+input{font-family:inherit;}
+img{max-width:100%; display:block;}
+
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size:42px 42px;
+  pointer-events:none;
+  z-index:0;
+}
+
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(201,162,75,0.35); border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(201,162,75,0.55);}
+
+:focus-visible{outline:2px solid var(--gold-400); outline-offset:3px; border-radius:6px;}
+
+.screen{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  z-index:50;
+  padding:24px;
+  overflow-y:auto;
+}
+.hidden{display:none !important;}
+
+/* ============ ONBOARDING ============ */
+#onboardingScreen{
+  background:
+    radial-gradient(1100px 650px at 50% -8%, rgba(201,162,75,0.16), transparent 60%),
+    var(--navy-950);
+}
+.ob-card{
+  width:100%; max-width:460px;
+  background:linear-gradient(180deg, var(--navy-800), var(--navy-900));
+  border:1px solid rgba(201,162,75,0.25);
+  border-radius:22px;
+  padding:38px 30px 30px;
+  box-shadow:var(--shadow-deep);
+  position:relative;
+  animation:riseIn .6s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes riseIn{from{opacity:0; transform:translateY(18px) scale(.98);} to{opacity:1; transform:translateY(0) scale(1);}}
+
+.ob-crest{
+  width:64px; height:64px; margin:0 auto 16px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 35% 30%, var(--gold-300), var(--gold-500) 60%, #9c7a32 100%);
+  box-shadow:0 8px 22px rgba(201,162,75,0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+  font-weight:900; color:var(--navy-950); font-size:22px; letter-spacing:-1px;
+}
+.ob-title{text-align:center; font-size:24px; font-weight:800; color:var(--cream-50); letter-spacing:.5px;}
+.ob-sub{text-align:center; font-size:13px; color:rgba(245,240,230,0.55); margin-top:6px; margin-bottom:26px;}
+
+.field-group{margin-bottom:16px;}
+.field-label{font-size:12.5px; color:var(--gold-300); font-weight:600; margin-bottom:7px; display:block;}
+.field-input{
+  width:100%; padding:13px 15px; border-radius:12px;
+  background:rgba(7,15,31,0.55);
+  border:1px solid rgba(201,162,75,0.22);
+  color:var(--cream-50); font-size:14.5px;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.field-input::placeholder{color:rgba(245,240,230,0.32);}
+.field-input:focus{border-color:var(--gold-400); box-shadow:0 0 0 3px rgba(201,162,75,0.14); background:rgba(7,15,31,0.75);}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+
+.upload-zone{
+  margin-top:6px;
+  border:1.5px dashed rgba(201,162,75,0.4);
+  border-radius:16px;
+  padding:18px;
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+  background:rgba(201,162,75,0.04);
+}
+.upload-zone:hover{border-color:var(--gold-400); background:rgba(201,162,75,0.08);}
+.upload-zone.has-image{border-style:solid;}
+.upload-preview{
+  width:54px; height:54px; border-radius:50%; flex-shrink:0;
+  background:var(--navy-700);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+  border:2px solid var(--gold-500);
+}
+.upload-preview img{width:100%; height:100%; object-fit:cover;}
+.upload-preview svg{width:24px; height:24px; opacity:.5;}
+.upload-text-main{font-size:13.5px; font-weight:600; color:var(--cream-50);}
+.upload-text-sub{font-size:11.5px; color:rgba(245,240,230,0.5); margin-top:2px;}
+
+.hint-error{
+  font-size:12px; color:#e98b78; margin-top:4px; min-height:0;
+  display:flex; align-items:center; gap:5px; opacity:0; transform:translateY(-4px);
+  transition:opacity .2s, transform .2s;
+}
+.hint-error.show{opacity:1; transform:translateY(0);}
+
+#adminReveal{
+  max-height:0; overflow:hidden; opacity:0;
+  transition:max-height .5s cubic-bezier(.2,.8,.2,1), opacity .5s, margin-top .5s;
+}
+#adminReveal.open{max-height:160px; opacity:1; margin-top:14px;}
+.admin-toggle-link{
+  font-size:12px; color:rgba(201,162,75,0.55); text-align:center;
+  display:block; width:100%; padding:6px; margin-top:10px;
+  transition:color .2s;
+  letter-spacing:.3px;
+}
+.admin-toggle-link:hover{color:var(--gold-400);}
+
+.btn-primary{
+  width:100%; padding:14px; border-radius:13px; margin-top:8px;
+  background:linear-gradient(180deg, var(--gold-400), var(--gold-500));
+  color:var(--navy-950); font-weight:800; font-size:15px;
+  box-shadow:0 10px 24px -8px rgba(201,162,75,0.5);
+  transition:transform .15s, box-shadow .15s, filter .15s;
+  position:relative; overflow:hidden;
+}
+.btn-primary:hover{transform:translateY(-1px); box-shadow:0 14px 28px -8px rgba(201,162,75,0.6);}
+.btn-primary:active{transform:translateY(0px) scale(.99);}
+.btn-primary:disabled{filter:grayscale(.6) opacity(.5); cursor:not-allowed; transform:none; box-shadow:none;}
+.btn-primary.loading .btn-label{opacity:0;}
+.btn-spinner{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .2s;
+}
+.btn-primary.loading .btn-spinner{opacity:1;}
+.spin{width:18px; height:18px; border-radius:50%; border:2.5px solid rgba(7,15,31,0.25); border-top-color:var(--navy-950); animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ============ ADMIN LOGIN MODAL ============ */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(5,9,18,0.72); backdrop-filter:blur(6px);
+  z-index:80; display:flex; align-items:center; justify-content:center; padding:20px;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+.modal-card{
+  width:100%; max-width:380px;
+  background:linear-gradient(180deg, var(--navy-800), var(--navy-900));
+  border:1px solid rgba(201,162,75,0.3);
+  border-radius:20px; padding:30px 26px;
+  box-shadow:var(--shadow-deep);
+  animation:popIn .3s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes popIn{from{opacity:0; transform:scale(.92);} to{opacity:1; transform:scale(1);}}
+.modal-icon{
+  width:50px; height:50px; border-radius:50%; margin:0 auto 14px;
+  background:rgba(201,162,75,0.12); border:1px solid rgba(201,162,75,0.3);
+  display:flex; align-items:center; justify-content:center;
+}
+.modal-icon svg{width:22px; height:22px; stroke:var(--gold-400);}
+.modal-title{text-align:center; font-weight:800; font-size:17px; color:var(--cream-50);}
+.modal-sub{text-align:center; font-size:12.5px; color:rgba(245,240,230,0.5); margin-top:5px; margin-bottom:20px;}
+.code-input{
+  width:100%; padding:14px 16px; border-radius:12px; text-align:center;
+  background:rgba(7,15,31,0.6); border:1px solid rgba(201,162,75,0.25);
+  color:var(--cream-50); font-size:18px; letter-spacing:3px;
+  -webkit-text-security:disc;
+}
+.code-input:focus{border-color:var(--gold-400); box-shadow:0 0 0 3px rgba(201,162,75,0.14);}
+.modal-actions{display:flex; gap:10px; margin-top:18px;}
+.btn-ghost{
+  flex:1; padding:12px; border-radius:11px; font-size:13.5px; font-weight:600;
+  background:rgba(255,255,255,0.04); color:rgba(245,240,230,0.75);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:background .2s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);}
+.btn-gold-sm{
+  flex:1.4; padding:12px; border-radius:11px; font-size:13.5px; font-weight:800;
+  background:linear-gradient(180deg, var(--gold-400), var(--gold-500)); color:var(--navy-950);
+}
+.lock-banner{
+  text-align:center; font-size:12px; color:#e98b78; margin-top:14px;
+  background:rgba(179,67,47,0.12); border:1px solid rgba(179,67,47,0.3);
+  padding:10px; border-radius:10px; display:none;
+}
+.lock-banner.show{display:block;}
+
+/* ============ MAIN APP SHELL ============ */
+#appShell{display:none; min-height:100vh; flex-direction:column; position:relative; z-index:1;}
+#appShell.active{display:flex;}
+
+/* BUG FIX #1: removed duplicate position:relative / position:sticky conflict */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  background:rgba(11,27,51,0.78); backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(201,162,75,0.18);
+  padding:16px 18px;
+  display:flex; align-items:center; justify-content:center;
+}
+.topbar-title{
+  font-size:19px; font-weight:800; letter-spacing:1.5px; color:var(--cream-50);
+  display:flex; align-items:center; gap:9px;
+  /* BUG FIX #2: pointer-events on title so tap detection works reliably */
+  cursor:pointer; user-select:none;
+}
+.topbar-title .dot{width:6px; height:6px; border-radius:50%; background:var(--gold-400); box-shadow:0 0 8px var(--gold-400); pointer-events:none;}
+.topbar-user{
+  position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  display:flex; align-items:center; gap:9px;
+}
+.topbar-avatar{
+  width:34px; height:34px; border-radius:50%; overflow:hidden;
+  border:1.5px solid var(--gold-500); flex-shrink:0; cursor:pointer;
+  background:var(--navy-700);
+}
+.topbar-avatar img{width:100%; height:100%; object-fit:cover;}
+.logout-btn{
+  position:absolute; right:16px; top:50%; transform:translateY(-50%);
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+}
+.logout-btn:hover{background:rgba(179,67,47,0.2);}
+.logout-btn svg{width:16px; height:16px; stroke:rgba(245,240,230,0.7);}
+
+.main-content{flex:1; padding:28px 18px 100px; max-width:760px; width:100%; margin:0 auto;}
+
+.welcome-block{text-align:center; margin-bottom:30px; animation:riseIn .5s ease;}
+.welcome-avatar{
+  width:84px; height:84px; border-radius:50%; margin:0 auto 14px;
+  border:3px solid var(--gold-500); overflow:hidden;
+  box-shadow:0 10px 30px -8px rgba(201,162,75,0.4);
+  background:var(--navy-700);
+}
+.welcome-avatar img{width:100%; height:100%; object-fit:cover;}
+.welcome-name{font-size:21px; font-weight:800; color:var(--cream-50);}
+.welcome-sub{font-size:13px; color:rgba(245,240,230,0.5); margin-top:4px;}
+
+.section-label{
+  font-size:13px; font-weight:700; color:var(--gold-300); letter-spacing:.5px;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.section-label svg{width:15px; height:15px; stroke:var(--gold-400);}
+
+.history-empty{
+  text-align:center; padding:46px 20px;
+  background:rgba(255,255,255,0.02); border:1px dashed rgba(201,162,75,0.22);
+  border-radius:18px;
+}
+.history-empty svg{width:40px; height:40px; stroke:rgba(201,162,75,0.35); margin:0 auto 12px;}
+.history-empty-title{font-size:14.5px; font-weight:700; color:rgba(245,240,230,0.7);}
+.history-empty-sub{font-size:12.5px; color:rgba(245,240,230,0.42); margin-top:5px; line-height:1.8;}
+
+.history-grid{display:flex; flex-direction:column; gap:12px;}
+.history-card{
+  background:linear-gradient(135deg, var(--navy-800), var(--navy-900));
+  border:1px solid rgba(201,162,75,0.2);
+  border-radius:16px; padding:16px 18px;
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:transform .15s, border-color .15s;
+}
+.history-card:hover{transform:translateX(-2px); border-color:rgba(201,162,75,0.4);}
+.history-icon{
+  width:46px; height:46px; border-radius:12px; flex-shrink:0;
+  background:linear-gradient(160deg, var(--gold-300), var(--gold-500));
+  display:flex; align-items:center; justify-content:center;
+  color:var(--navy-950); font-weight:900; font-size:15px;
+}
+.history-info{flex:1; min-width:0;}
+.history-lang-title{font-size:14.5px; font-weight:700; color:var(--cream-50);}
+.history-date{font-size:11.5px; color:rgba(245,240,230,0.45); margin-top:3px;}
+.history-score-chip{
+  font-size:12px; font-weight:800; padding:5px 10px; border-radius:8px;
+  background:rgba(44,110,79,0.18); color:#7fd6ac; border:1px solid rgba(44,110,79,0.35);
+  flex-shrink:0;
+}
+
+/* FAB */
+.fab{
+  position:fixed; bottom:26px; left:26px; z-index:40;
+  width:60px; height:60px; border-radius:50%;
+  background:linear-gradient(160deg, var(--gold-300), var(--gold-500));
+  box-shadow:0 14px 34px -10px rgba(201,162,75,0.65), 0 0 0 6px rgba(201,162,75,0.08);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s, box-shadow .2s;
+}
+.fab:hover{transform:scale(1.06) rotate(90deg);}
+.fab:active{transform:scale(.95) rotate(90deg);}
+.fab svg{width:26px; height:26px; stroke:var(--navy-950); stroke-width:2.6;}
+
+/* redeem modal */
+.redeem-card{width:100%; max-width:400px;}
+.redeem-input-wrap{display:flex; gap:9px; justify-content:center; margin-top:6px;}
+.digit-box{
+  width:42px; height:52px; border-radius:11px;
+  background:rgba(7,15,31,0.6); border:1px solid rgba(201,162,75,0.25);
+  text-align:center; font-size:20px; font-weight:800; color:var(--cream-50);
+}
+.digit-box:focus{border-color:var(--gold-400); box-shadow:0 0 0 3px rgba(201,162,75,0.14);}
+.redeem-msg{text-align:center; font-size:12.5px; margin-top:14px; min-height:18px;}
+.redeem-msg.err{color:#e98b78;}
+.redeem-msg.ok{color:#7fd6ac;}
+
+/* ============ CERTIFICATE ============ */
+#certScreen{
+  background:rgba(5,9,18,0.92); backdrop-filter:blur(8px);
+  flex-direction:column; gap:18px; padding:18px;
+}
+.cert-toolbar{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+.cert-tool-btn{
+  padding:10px 18px; border-radius:11px; font-size:13px; font-weight:700;
+  background:rgba(255,255,255,0.06); color:var(--cream-50); border:1px solid rgba(255,255,255,0.1);
+  display:flex; align-items:center; gap:7px;
+  transition:background .2s;
+}
+.cert-tool-btn svg{width:15px; height:15px;}
+.cert-tool-btn:hover{background:rgba(255,255,255,0.12);}
+.cert-tool-btn.gold{background:linear-gradient(180deg, var(--gold-400), var(--gold-500)); color:var(--navy-950); border:none;}
+
+.cert-stage{
+  width:100%; max-width:920px; aspect-ratio:16/9;
+  display:flex; align-items:center; justify-content:center;
+  overflow:auto;
+}
+.certificate{
+  width:100%; aspect-ratio:16/9;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(201,162,75,0.08), transparent 55%),
+    var(--cream-50);
+  border-radius:14px;
+  position:relative;
+  padding:3.2% 4.4%;
+  display:flex; flex-direction:column; align-items:center;
+  font-family:'Vazirmatn', sans-serif;
+  color:var(--ink-900);
+  box-shadow:0 40px 90px -20px rgba(0,0,0,0.6);
+  overflow:hidden;
+}
+.certificate::before{
+  content:"";
+  position:absolute; inset:14px;
+  border:2px solid var(--gold-500);
+  border-radius:8px;
+  pointer-events:none;
+}
+.certificate::after{
+  content:"";
+  position:absolute; inset:22px;
+  border:1px solid rgba(201,162,75,0.5);
+  border-radius:6px;
+  pointer-events:none;
+}
+.cert-corner{position:absolute; width:34px; height:34px; z-index:2;}
+.cert-corner svg{width:100%; height:100%;}
+.cert-corner.tl{top:18px; left:18px; transform:rotate(0deg);}
+.cert-corner.tr{top:18px; right:18px; transform:scaleX(-1);}
+.cert-corner.bl{bottom:18px; left:18px; transform:scaleY(-1);}
+.cert-corner.br{bottom:18px; right:18px; transform:scale(-1,-1);}
+
+.cert-watermark{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:13vw; font-weight:900; color:rgba(11,27,51,0.025);
+  letter-spacing:6px; pointer-events:none; white-space:nowrap; z-index:0;
+}
+
+.cert-inner{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; height:100%;}
+.cert-brand{font-size:1.05vw; font-weight:800; letter-spacing:3px; color:var(--gold-600,#a9822f); text-transform:uppercase; margin-top:0.3vw;}
+.cert-brand-fa{font-size:1.5vw; font-weight:800; color:var(--navy-900); letter-spacing:1px; margin-top:0.2vw;}
+
+.cert-photo{
+  width:11%; aspect-ratio:1/1; border-radius:50%; margin-top:1.6vw;
+  border:0.3vw solid var(--gold-500); overflow:hidden;
+  box-shadow:0 0.5vw 1.2vw -0.3vw rgba(201,162,75,0.5);
+  background:var(--navy-700);
+}
+.cert-photo img{width:100%; height:100%; object-fit:cover;}
+
+.cert-name{
+  font-size:2.6vw; font-weight:900; color:var(--navy-900); margin-top:1.1vw;
+  letter-spacing:.5px;
+}
+.cert-presented{font-size:0.95vw; color:#7a6a44; margin-top:0.5vw; font-weight:500;}
+
+.cert-course-line{
+  font-size:1.35vw; font-weight:700; color:var(--ink-900); margin-top:1.5vw;
+  text-align:center; line-height:1.6; max-width:78%;
+}
+.cert-course-name{color:var(--emerald-700); font-weight:900;}
+
+.cert-issuer-line{font-size:0.9vw; color:#7a6a44; margin-top:1vw; font-weight:500;}
+.cert-issuer-line b{color:var(--navy-900); font-weight:800;}
+
+.cert-score-row{
+  display:flex; align-items:center; gap:0.9vw; margin-top:1.6vw;
+  background:rgba(31,77,58,0.07); border:1px solid rgba(31,77,58,0.25);
+  padding:0.55vw 1.4vw; border-radius:99px;
+}
+.cert-score-label{font-size:0.85vw; font-weight:700; color:var(--emerald-700);}
+.cert-score-num{font-size:1.3vw; font-weight:900; color:var(--emerald-700);}
+
+.cert-bottom-row{
+  margin-top:auto; width:100%;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:0 1%;
+}
+.cert-sig-block{text-align:center; width:24%;}
+.cert-sig-line{border-top:1.3px solid #8a7a52; padding-top:0.4vw; margin-top:1.6vw;}
+.cert-sig-title{font-size:0.78vw; color:#7a6a44; font-weight:600;}
+.cert-sig-name{font-size:0.9vw; color:var(--navy-900); font-weight:800; margin-top:0.15vw;}
+
+.cert-seal{
+  width:13%; aspect-ratio:1/1; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.cert-seal-ring{
+  position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg, var(--gold-500), var(--gold-300), var(--gold-500), var(--gold-300), var(--gold-500));
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 0.45vw), #000 calc(100% - 0.45vw));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 0.45vw), #000 calc(100% - 0.45vw));
+  opacity:0.92;
+}
+.cert-seal-inner{
+  width:78%; height:78%; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--gold-300), var(--gold-500) 65%, #9c7a32 100%);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  box-shadow:inset 0 0.2vw 0.4vw rgba(255,255,255,0.5), inset 0 -0.2vw 0.5vw rgba(0,0,0,0.25);
+}
+.cert-seal-inner .s1{font-size:1vw; font-weight:900; color:var(--navy-950);}
+.cert-seal-inner .s2{font-size:0.5vw; font-weight:700; color:rgba(11,15,31,0.7); letter-spacing:1px;}
+
+.cert-id-row{
+  position:absolute; bottom:1.1vw; left:50%; transform:translateX(-50%);
+  font-size:0.65vw; color:rgba(122,106,68,0.7); letter-spacing:1px; font-weight:600;
+  z-index:2;
+}
+.cert-date-row{
+  position:absolute; bottom:1.1vw; right:1.5%;
+  font-size:0.7vw; color:#7a6a44; font-weight:600; z-index:2;
+}
+.cert-date-row-fa{
+  position:absolute; bottom:1.1vw; left:1.5%;
+  font-size:0.7vw; color:#7a6a44; font-weight:600; z-index:2;
+}
+
+/* ============ ADMIN PANEL ============ */
+#adminScreen{align-items:flex-start; justify-content:flex-start; padding:0; background:var(--navy-950);}
+.admin-shell{width:100%; min-height:100vh; display:flex; flex-direction:column;}
+.admin-topbar{
+  background:rgba(11,27,51,0.9); backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(201,162,75,0.2);
+  padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:20;
+}
+.admin-brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:15.5px; color:var(--cream-50);}
+.admin-brand-badge{
+  background:linear-gradient(180deg, var(--gold-400), var(--gold-500)); color:var(--navy-950);
+  font-size:10px; font-weight:900; padding:3px 9px; border-radius:7px; letter-spacing:.5px;
+}
+.admin-exit{
+  font-size:12.5px; color:rgba(245,240,230,0.6); display:flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:10px; background:rgba(255,255,255,0.05);
+  transition:background .2s;
+}
+.admin-exit:hover{background:rgba(179,67,47,0.18); color:#e98b78;}
+.admin-exit svg{width:14px; height:14px;}
+
+.admin-tabs{
+  display:flex; gap:6px; padding:14px 16px 0; overflow-x:auto;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.admin-tab{
+  padding:11px 16px; font-size:13px; font-weight:700; color:rgba(245,240,230,0.5);
+  border-radius:11px 11px 0 0; white-space:nowrap; position:relative;
+  display:flex; align-items:center; gap:7px;
+}
+.admin-tab svg{width:14px; height:14px;}
+.admin-tab.active{color:var(--gold-300); background:rgba(201,162,75,0.08);}
+.admin-tab.active::after{
+  content:""; position:absolute; bottom:-1px; left:0; right:0; height:2px;
+  background:var(--gold-400);
+}
+
+.admin-body{flex:1; padding:24px 18px 60px; max-width:920px; width:100%; margin:0 auto;}
+.admin-pane{display:none; animation:fadeIn .3s ease;}
+.admin-pane.active{display:block;}
+
+.stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;}
+.stat-card{
+  background:linear-gradient(135deg, var(--navy-800), var(--navy-900));
+  border:1px solid rgba(201,162,75,0.18); border-radius:16px; padding:16px;
+}
+.stat-num{font-size:24px; font-weight:900; color:var(--gold-300);}
+.stat-label{font-size:11.5px; color:rgba(245,240,230,0.5); margin-top:3px;}
+
+.admin-card{
+  background:linear-gradient(135deg, var(--navy-800), var(--navy-900));
+  border:1px solid rgba(201,162,75,0.18); border-radius:18px; padding:22px;
+  margin-bottom:18px;
+}
+.admin-card-title{font-size:15px; font-weight:800; color:var(--cream-50); margin-bottom:18px; display:flex; align-items:center; gap:8px;}
+.admin-card-title svg{width:16px; height:16px; stroke:var(--gold-400);}
+
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.form-grid .full{grid-column:1/-1;}
+.select-input{
+  width:100%; padding:13px 15px; border-radius:12px;
+  background:rgba(7,15,31,0.55); border:1px solid rgba(201,162,75,0.22);
+  color:var(--cream-50); font-size:14px; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23c9a24b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:left 14px center;
+}
+.score-slider-wrap{display:flex; align-items:center; gap:14px;}
+.score-slider{flex:1; height:6px; border-radius:99px; background:rgba(201,162,75,0.2); appearance:none; outline:none;}
+.score-slider::-webkit-slider-thumb{
+  appearance:none; width:20px; height:20px; border-radius:50%;
+  background:var(--gold-400); border:3px solid var(--navy-950); cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+.score-display{
+  width:54px; height:42px; border-radius:11px; background:rgba(44,110,79,0.18);
+  border:1px solid rgba(44,110,79,0.4); display:flex; align-items:center; justify-content:center;
+  font-weight:900; color:#7fd6ac; font-size:15px; flex-shrink:0;
+}
+
+.schedule-toggle{display:flex; align-items:center; gap:10px; margin-top:4px; cursor:pointer; user-select:none;}
+.toggle-switch{width:42px; height:24px; border-radius:99px; background:rgba(255,255,255,0.12); position:relative; transition:background .2s; flex-shrink:0;}
+.toggle-switch.on{background:var(--emerald-500);}
+.toggle-switch::after{
+  content:""; position:absolute; top:3px; right:3px; width:18px; height:18px; border-radius:50%;
+  background:#fff; transition:transform .2s;
+}
+.toggle-switch.on::after{transform:translateX(-18px);}
+.toggle-label{font-size:13px; color:rgba(245,240,230,0.75); font-weight:600;}
+
+.datetime-row{display:none; gap:12px; margin-top:12px;}
+.datetime-row.show{display:grid; grid-template-columns:1fr 1fr;}
+
+.generate-result{
+  margin-top:18px; padding:20px; border-radius:14px;
+  background:rgba(44,110,79,0.1); border:1px solid rgba(44,110,79,0.3);
+  text-align:center; display:none;
+  animation:popIn .35s ease;
+}
+.generate-result.show{display:block;}
+.generate-result-label{font-size:12px; color:#7fd6ac; font-weight:700; margin-bottom:8px;}
+.generate-result-code{font-size:30px; font-weight:900; color:var(--cream-50); letter-spacing:6px;}
+.generate-result-sub{font-size:11.5px; color:rgba(245,240,230,0.5); margin-top:8px;}
+.copy-code-btn{
+  margin-top:12px; padding:9px 18px; border-radius:10px; font-size:12.5px; font-weight:700;
+  background:rgba(255,255,255,0.08); color:var(--cream-50); display:inline-flex; gap:6px; align-items:center;
+}
+
+.user-list{display:flex; flex-direction:column; gap:10px;}
+.user-row{
+  display:flex; align-items:center; gap:13px; padding:13px 15px;
+  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-radius:14px;
+  cursor:pointer; transition:background .15s, border-color .15s;
+}
+.user-row:hover{background:rgba(201,162,75,0.06); border-color:rgba(201,162,75,0.25);}
+.user-row-avatar{
+  width:42px; height:42px; border-radius:50%; overflow:hidden; flex-shrink:0;
+  border:1.5px solid rgba(201,162,75,0.4); background:var(--navy-700);
+}
+.user-row-avatar img{width:100%; height:100%; object-fit:cover;}
+.user-row-info{flex:1; min-width:0;}
+.user-row-name{font-size:14px; font-weight:700; color:var(--cream-50);}
+.user-row-name .en{font-size:11px; color:rgba(245,240,230,0.4); font-weight:500; margin-right:6px;}
+.user-row-date{font-size:11px; color:rgba(245,240,230,0.4); margin-top:2px;}
+.user-row-arrow{width:16px; height:16px; stroke:rgba(201,162,75,0.5); flex-shrink:0; transform:rotate(180deg);}
+.admin-empty{text-align:center; padding:40px 20px; color:rgba(245,240,230,0.4); font-size:13px;}
+
+.archive-card{
+  display:flex; align-items:center; gap:13px; padding:15px 16px;
+  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-radius:14px;
+  margin-bottom:10px;
+}
+.archive-icon{
+  width:42px; height:42px; border-radius:11px; flex-shrink:0;
+  background:linear-gradient(160deg, var(--gold-300), var(--gold-500));
+  display:flex; align-items:center; justify-content:center; color:var(--navy-950); font-weight:900; font-size:13px;
+}
+.archive-info{flex:1; min-width:0;}
+.archive-name{font-size:13.5px; font-weight:700; color:var(--cream-50);}
+.archive-meta{font-size:11px; color:rgba(245,240,230,0.45); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap;}
+.archive-status{
+  font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:7px; flex-shrink:0;
+}
+.archive-status.pending{background:rgba(201,162,75,0.15); color:var(--gold-300); border:1px solid rgba(201,162,75,0.3);}
+.archive-status.used{background:rgba(120,120,130,0.15); color:rgba(245,240,230,0.5); border:1px solid rgba(120,120,130,0.25);}
+.archive-status.scheduled{background:rgba(31,77,58,0.18); color:#7fd6ac; border:1px solid rgba(31,77,58,0.4);}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(0);
+  background:var(--navy-800); border:1px solid rgba(201,162,75,0.35);
+  color:var(--cream-50); padding:13px 22px; border-radius:13px; font-size:13px; font-weight:600;
+  box-shadow:var(--shadow-deep); z-index:200; display:flex; align-items:center; gap:9px;
+  opacity:0; pointer-events:none; transition:opacity .3s, transform .3s;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+.toast svg{width:16px; height:16px; stroke:#7fd6ac; flex-shrink:0;}
+
+/* responsive */
+@media (max-width:640px){
+  .form-grid{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:1fr 1fr 1fr; gap:8px;}
+  .stat-num{font-size:19px;}
+  .field-row{grid-template-columns:1fr;}
+  .cert-stage{align-items:flex-start;}
+  /* BUG FIX #8: wider digit-boxes on small screens for Persian keyboards */
+  .digit-box{width:38px; height:48px; font-size:17px;}
+  .redeem-input-wrap{gap:6px;}
+}
+@media (min-width:1024px){
+  .main-content{padding-top:40px;}
+  .admin-body{padding-top:30px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING / LOGIN ============ -->
+<div id="onboardingScreen" class="screen">
+  <div class="ob-card">
+    <div class="ob-crest">CS</div>
+    <div class="ob-title">CS Degree</div>
+    <div class="ob-sub">برای ورود، مشخصات خود را کامل کنید</div>
+
+    <div class="field-group">
+      <span class="field-label">نام و نام خانوادگی (فارسی)</span>
+      <div class="field-row">
+        <input id="firstNameFa" class="field-input" type="text" placeholder="نام" autocomplete="off">
+        <input id="lastNameFa" class="field-input" type="text" placeholder="نام خانوادگی" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <span class="field-label">نام و نام خانوادگی (انگلیسی)</span>
+      <div class="field-row">
+        <input id="firstNameEn" class="field-input" type="text" placeholder="First name" autocomplete="off" dir="ltr">
+        <input id="lastNameEn" class="field-input" type="text" placeholder="Last name" autocomplete="off" dir="ltr">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <span class="field-label">تصویر پروفایل</span>
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-preview" id="uploadPreview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e6" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+        </div>
+        <div>
+          <div class="upload-text-main">بارگزاری تصویر از گالری</div>
+          <div class="upload-text-sub">الزامی — برای ساخت مدرک استفاده می‌شود</div>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" class="hidden">
+      <div class="hint-error" id="uploadError">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e98b78" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span>برای ورود باید یک تصویر پروفایل بارگزاری کنید</span>
+      </div>
+    </div>
+
+    <div id="adminReveal">
+      <button class="admin-toggle-link" id="adminToggleBtn">⚜ کد پنل ادمین</button>
+    </div>
+
+    <button class="btn-primary" id="enterBtn">
+      <span class="btn-label">ورود به سایت</span>
+      <span class="btn-spinner"><span class="spin"></span></span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ ADMIN PASSCODE MODAL ============ -->
+<div id="adminModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <div class="modal-title">ورود ادمین</div>
+    <div class="modal-sub">کد دسترسی پنل مدیریت را وارد کنید</div>
+    <input type="password" id="adminCodeInput" class="code-input" placeholder="••••••••" autocomplete="off">
+    <div class="lock-banner" id="adminLockBanner">به دلیل تلاش‌های ناموفق متعدد، ورود موقتاً قفل شد. لطفاً کمی صبر کنید.</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="adminCancelBtn">انصراف</button>
+      <button class="btn-gold-sm" id="adminConfirmBtn">ورود</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="appShell">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-avatar" id="topbarAvatar"></div>
+    </div>
+    <!-- BUG FIX #2: title is now the tap target for admin re-entry -->
+    <div class="topbar-title" id="topbarTitle"><span class="dot"></span>CS Degree</div>
+    <button class="logout-btn" id="logoutBtn" title="خروج">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="welcome-block">
+      <div class="welcome-avatar" id="welcomeAvatar"></div>
+      <div class="welcome-name" id="welcomeName">—</div>
+      <div class="welcome-sub">به پنل شخصی خودت خوش اومدی</div>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+      تاریخچه مدارک
+    </div>
+    <div id="historyContainer"></div>
+  </div>
+
+  <div class="fab" id="fabBtn" title="دریافت مدرک">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </div>
+</div>
+
+<!-- ============ REDEEM CODE MODAL ============ -->
+<div id="redeemModal" class="modal-overlay hidden">
+  <div class="modal-card redeem-card">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M8.5 14.5L6 21l6-3 6 3-2.5-6.5"/></svg>
+    </div>
+    <div class="modal-title">دریافت مدرک</div>
+    <div class="modal-sub">کد ۶ رقمی دریافت مدرک خود را وارد کنید</div>
+    <div class="redeem-input-wrap" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="0" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="1" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="2" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="3" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="4" dir="ltr">
+      <input maxlength="1" class="digit-box" inputmode="numeric" pattern="[0-9]*" data-i="5" dir="ltr">
+    </div>
+    <div class="redeem-msg" id="redeemMsg"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="redeemCancelBtn">انصراف</button>
+      <button class="btn-gold-sm" id="redeemConfirmBtn">تایید کد</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CERTIFICATE SCREEN ============ -->
+<div id="certScreen" class="screen hidden">
+  <div class="cert-toolbar">
+    <button class="cert-tool-btn" id="certBackBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      بازگشت
+    </button>
+    <button class="cert-tool-btn" id="certLangBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg>
+      <span id="certLangBtnText">English Version</span>
+    </button>
+    <button class="cert-tool-btn gold" id="certDownloadBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg>
+      دانلود مدرک
+    </button>
+  </div>
+  <div class="cert-stage">
+    <div class="certificate" id="certificateEl">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN PANEL ============ -->
+<div id="adminScreen" class="screen hidden">
+  <div class="admin-shell">
+    <div class="admin-topbar">
+      <div class="admin-brand">
+        CS Degree <span class="admin-brand-badge">ADMIN</span>
+      </div>
+      <button class="admin-exit" id="adminExitBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        خروج از پنل
+      </button>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="generate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        ساخت مدرک
+      </button>
+      <button class="admin-tab" data-tab="archive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+        آرشیو مدارک
+      </button>
+      <button class="admin-tab" data-tab="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        کاربران سایت
+      </button>
+    </div>
+
+    <div class="admin-body">
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num" id="statUsers">0</div><div class="stat-label">کاربران ثبت‌نام شده</div></div>
+        <div class="stat-card"><div class="stat-num" id="statCerts">0</div><div class="stat-label">مدارک صادر شده</div></div>
+        <div class="stat-card"><div class="stat-num" id="statPending">0</div><div class="stat-label">کدهای فعال</div></div>
+      </div>
+
+      <!-- GENERATE PANE -->
+      <div class="admin-pane active" id="pane-generate">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2z"/></svg>
+            ساخت مدرک جدید
+          </div>
+          <button class="cert-tool-btn" id="genForSelfBtn" style="margin-bottom:18px; background:rgba(201,162,75,0.1); border-color:rgba(201,162,75,0.3); color:var(--gold-300);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+            ساخت مدرک برای خودم
+          </button>
+          <div class="form-grid">
+            <div>
+              <span class="field-label">نام کاربر (فارسی)</span>
+              <input id="genNameFa" class="field-input" type="text" placeholder="مثال: امیر حسین نادری">
+            </div>
+            <div>
+              <span class="field-label">نام کاربر (انگلیسی)</span>
+              <input id="genNameEn" class="field-input" type="text" placeholder="Example: Amirhosein Naderi" dir="ltr">
+            </div>
+            <div class="full">
+              <span class="field-label">انتخاب از کاربران ثبت‌نام شده (اختیاری)</span>
+              <select class="select-input" id="genUserSelect">
+                <option value="">— بدون انتخاب، تایپ دستی —</option>
+              </select>
+            </div>
+            <div class="full">
+              <span class="field-label">زبان برنامه‌نویسی</span>
+              <input id="genLang" class="field-input" type="text" placeholder="مثال: جاوااسکریپت / Python / C#">
+            </div>
+            <div class="full">
+              <span class="field-label">نمره نهایی (از ۱۰۰)</span>
+              <div class="score-slider-wrap">
+                <input type="range" min="0" max="100" value="85" class="score-slider" id="genScoreSlider">
+                <div class="score-display" id="genScoreDisplay">85</div>
+              </div>
+            </div>
+            <div class="full">
+              <label class="schedule-toggle" id="scheduleToggleWrap">
+                <div class="toggle-switch" id="scheduleToggle"></div>
+                <span class="toggle-label">زمان‌بندی فعال‌سازی کد (به‌جای فعال بودن فوری)</span>
+              </label>
+              <div class="datetime-row" id="scheduleDateRow">
+                <div>
+                  <span class="field-label">تاریخ فعال‌سازی</span>
+                  <input type="date" id="scheduleDate" class="field-input">
+                </div>
+                <div>
+                  <span class="field-label">ساعت فعال‌سازی</span>
+                  <input type="time" id="scheduleTime" class="field-input">
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" id="generateBtn" style="margin-top:20px;">
+            <span class="btn-label">تولید کد مدرک</span>
+            <span class="btn-spinner"><span class="spin"></span></span>
+          </button>
+
+          <div class="generate-result" id="generateResult">
+            <div class="generate-result-label">کد ۶ رقمی تولید شد</div>
+            <div class="generate-result-code" id="generateResultCode">000000</div>
+            <div class="generate-result-sub" id="generateResultSub">این کد را در اختیار کاربر قرار دهید</div>
+            <button class="copy-code-btn" id="copyCodeBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              کپی کد
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHIVE PANE -->
+      <div class="admin-pane" id="pane-archive">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+            تاریخچه مدارک تولید شده
+          </div>
+          <div id="archiveList"></div>
+        </div>
+      </div>
+
+      <!-- USERS PANE -->
+      <div class="admin-pane" id="pane-users">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            افرادی که وارد سایت شدند
+          </div>
+          <div class="user-list" id="usersList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ===================== CONSTANTS ===================== */
+const ADMIN_TRIGGER_FIRST_FA = "امیر حسین";
+const ADMIN_TRIGGER_LAST_FA = "نادری";
+const ADMIN_CODE = "AAmirhosein16$$";
+const LS_KEYS = {
+  currentUser: "csd_currentUser",
+  allUsers: "csd_allUsers",
+  certificates: "csd_certificates",
+  history: "csd_history_",
+  adminAuthed: "csd_adminAuthed"
+};
+
+let uploadedPhotoDataUrl = null;
+let adminFailCount = 0;
+let adminLockUntil = 0;
+
+/* ===================== UTILITIES ===================== */
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+function uid(){ return 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+function genSixDigit(){ return String(Math.floor(100000 + Math.random()*900000)); }
+function nowIso(){ return new Date().toISOString(); }
+function fmtDateFa(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleDateString('fa-IR', {year:'numeric', month:'long', day:'numeric'}) + ' - ' + d.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
+  }catch(e){ return iso; }
+}
+function fmtDateEn(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'});
+}
+function fmtDateFaShort(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('fa-IR', {year:'numeric', month:'2-digit', day:'2-digit'});
+}
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showToast(msg){
+  const t = $('#toast');
+  $('#toastText').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=> t.classList.remove('show'), 2600);
+}
+
+/* ===================== FIREBASE-BACKED STORAGE ===================== */
+/* Keeps every existing call to loadJSON/saveJSON perfectly synchronous (no other
+   code below had to change), while transparently mirroring data to Firestore so
+   it survives across browsers/devices instead of being stuck in localStorage. */
+const FB_COLLECTION = "csd_data";
+let __fbReady = false;
+const __fbQueue = [];
+
+function __fbWriteThrough(key, val){
+  if(!window.__csdFirebase) return;
+  const job = () => window.__csdFirebase.setDoc(FB_COLLECTION, key, val);
+  if(__fbReady){ job(); } else { __fbQueue.push(job); }
+}
+
+async function __fbPullAll(){
+  if(!window.__csdFirebase) return;
+  const keys = [LS_KEYS.currentUser, LS_KEYS.allUsers, LS_KEYS.certificates, LS_KEYS.adminAuthed];
+  // Pull base keys plus every per-user history key we know about from allUsers.
+  try{
+    const remoteUsers = await window.__csdFirebase.getDoc(FB_COLLECTION, LS_KEYS.allUsers);
+    if(Array.isArray(remoteUsers)){
+      remoteUsers.forEach(u => { if(u && u.id) keys.push(LS_KEYS.history + u.id); });
+    }
+  }catch(e){ console.error(e); }
+
+  await Promise.all(keys.map(async (key) => {
+    try{
+      const remoteVal = await window.__csdFirebase.getDoc(FB_COLLECTION, key);
+      if(remoteVal !== undefined){
+        localStorage.setItem(key, JSON.stringify(remoteVal));
+      }
+    }catch(e){ console.error(e); }
+  }));
+
+  __fbReady = true;
+  while(__fbQueue.length){ __fbQueue.shift()(); }
+}
+
+function loadJSON(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }catch(e){ return fallback; }
+}
+function saveJSON(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ console.error(e); }
+  __fbWriteThrough(key, val);
+}
+
+function getAllUsers(){ return loadJSON(LS_KEYS.allUsers, []); }
+function saveAllUsers(arr){ saveJSON(LS_KEYS.allUsers, arr); }
+function getCertificates(){ return loadJSON(LS_KEYS.certificates, []); }
+function saveCertificates(arr){ saveJSON(LS_KEYS.certificates, arr); }
+function getCurrentUser(){ return loadJSON(LS_KEYS.currentUser, null); }
+function setCurrentUser(u){ saveJSON(LS_KEYS.currentUser, u); }
+function getUserHistory(userId){ return loadJSON(LS_KEYS.history + userId, []); }
+function saveUserHistory(userId, arr){ saveJSON(LS_KEYS.history + userId, arr); }
+
+/* ===================== ONBOARDING LOGIC ===================== */
+const uploadZone = $('#uploadZone');
+const fileInput = $('#fileInput');
+const uploadPreview = $('#uploadPreview');
+const uploadError = $('#uploadError');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    showToast('فقط فایل تصویری مجاز است');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    uploadedPhotoDataUrl = ev.target.result;
+    uploadPreview.innerHTML = `<img src="${uploadedPhotoDataUrl}" alt="پروفایل">`;
+    uploadZone.classList.add('has-image');
+    uploadError.classList.remove('show');
+  };
+  reader.readAsDataURL(file);
+});
+
+function checkAdminTrigger(){
+  const fn = $('#firstNameFa').value.trim();
+  const ln = $('#lastNameFa').value.trim();
+  const reveal = $('#adminReveal');
+  if(fn === ADMIN_TRIGGER_FIRST_FA && ln === ADMIN_TRIGGER_LAST_FA){
+    reveal.classList.add('open');
+  } else {
+    reveal.classList.remove('open');
+  }
+}
+$('#firstNameFa').addEventListener('input', checkAdminTrigger);
+$('#lastNameFa').addEventListener('input', checkAdminTrigger);
+
+/* ===================== ADMIN MODAL OPEN / CLOSE ===================== */
+function openAdminModal(){
+  $('#adminModal').classList.remove('hidden');
+  $('#adminCodeInput').value = '';
+  $('#adminLockBanner').classList.remove('show');
+  setTimeout(()=> $('#adminCodeInput').focus(), 100);
+}
+function closeAdminModal(){
+  $('#adminModal').classList.add('hidden');
+}
+
+$('#adminToggleBtn').addEventListener('click', openAdminModal);
+$('#adminCancelBtn').addEventListener('click', closeAdminModal);
+
+$('#adminCodeInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') $('#adminConfirmBtn').click();
+});
+
+/* BUG FIX #7: adminConfirmBtn now correctly hides appShell before entering panel */
+$('#adminConfirmBtn').addEventListener('click', () => {
+  const now = Date.now();
+  if(now < adminLockUntil){
+    $('#adminLockBanner').classList.add('show');
+    return;
+  }
+  const val = $('#adminCodeInput').value;
+  if(val === ADMIN_CODE){
+    saveJSON(LS_KEYS.adminAuthed, true);
+    closeAdminModal();
+
+    // If there's no session yet, register admin as a user from the onboarding form
+    if(!getCurrentUser()){
+      const fnFa = $('#firstNameFa').value.trim();
+      const lnFa = $('#lastNameFa').value.trim();
+      const fnEn = $('#firstNameEn').value.trim();
+      const lnEn = $('#lastNameEn').value.trim();
+      if(fnFa && lnFa && fnEn && lnEn && uploadedPhotoDataUrl){
+        const adminUser = {
+          id: uid(),
+          firstNameFa: fnFa, lastNameFa: lnFa,
+          firstNameEn: fnEn, lastNameEn: lnEn,
+          photo: uploadedPhotoDataUrl,
+          joinedAt: nowIso()
+        };
+        setCurrentUser(adminUser);
+        const all = getAllUsers();
+        // avoid duplicate if already in list
+        if(!all.find(u => u.firstNameFa === adminUser.firstNameFa && u.lastNameFa === adminUser.lastNameFa)){
+          all.push(adminUser);
+          saveAllUsers(all);
+        }
+      } else {
+        showToast('برای ثبت کامل حساب ادمین، نام و تصویر پروفایل را هم تکمیل کنید');
+      }
+    }
+
+    enterAdminPanel();
+  } else {
+    adminFailCount++;
+    $('#adminCodeInput').value = '';
+    $('#adminCodeInput').style.borderColor = '#b3432f';
+    setTimeout(()=> $('#adminCodeInput').style.borderColor = '', 400);
+    if(adminFailCount >= 4){
+      adminLockUntil = Date.now() + 20000;
+      $('#adminLockBanner').classList.add('show');
+      adminFailCount = 0;
+    } else {
+      showToast('کد وارد شده صحیح نیست');
+    }
+  }
+});
+
+$('#enterBtn').addEventListener('click', () => {
+  const fnFa = $('#firstNameFa').value.trim();
+  const lnFa = $('#lastNameFa').value.trim();
+  const fnEn = $('#firstNameEn').value.trim();
+  const lnEn = $('#lastNameEn').value.trim();
+
+  if(!fnFa || !lnFa || !fnEn || !lnEn){
+    showToast('لطفاً تمام فیلدهای نام را پر کنید');
+    return;
+  }
+  if(!uploadedPhotoDataUrl){
+    uploadError.classList.add('show');
+    showToast('بارگزاری تصویر پروفایل الزامی است');
+    return;
+  }
+
+  const btn = $('#enterBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const user = {
+      id: uid(),
+      firstNameFa: fnFa, lastNameFa: lnFa,
+      firstNameEn: fnEn, lastNameEn: lnEn,
+      photo: uploadedPhotoDataUrl,
+      joinedAt: nowIso()
+    };
+    setCurrentUser(user);
+
+    const all = getAllUsers();
+    all.push(user);
+    saveAllUsers(all);
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    enterMainApp(user);
+  }, 650);
+});
+
+/* ===================== MAIN APP ===================== */
+function enterMainApp(user){
+  $('#onboardingScreen').classList.add('hidden');
+  /* BUG FIX #7: ensure admin panel is also hidden */
+  $('#adminScreen').classList.add('hidden');
+  $('#appShell').classList.add('active');
+
+  const avatarImg = `<img src="${user.photo}" alt="">`;
+  $('#topbarAvatar').innerHTML = avatarImg;
+  $('#welcomeAvatar').innerHTML = avatarImg;
+  $('#welcomeName').textContent = user.firstNameFa + ' ' + user.lastNameFa;
+
+  renderHistory(user.id);
+}
+
+function renderHistory(userId){
+  const history = getUserHistory(userId);
+  const container = $('#historyContainer');
+  if(history.length === 0){
+    container.innerHTML = `
+      <div class="history-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2z"/></svg>
+        <div class="history-empty-title">هنوز مدرکی دریافت نکرده‌اید</div>
+        <div class="history-empty-sub">با دکمه + پایین صفحه، کد دریافت مدرک خود را وارد کنید</div>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="history-grid">${history.slice().reverse().map(h => `
+    <div class="history-card" data-hist-id="${h.id}">
+      <div class="history-icon">${escapeHtml(h.certData && h.certData.lang ? h.certData.lang.slice(0,2) : 'CS')}</div>
+      <div class="history-info">
+        <div class="history-lang-title">${escapeHtml(h.courseTitle)}</div>
+        <div class="history-date">${fmtDateFa(h.downloadedAt)}</div>
+      </div>
+      <div class="history-score-chip">${h.score} / 100</div>
+    </div>
+  `).join('')}</div>`;
+
+  // BUG FIX #3: pass the saved lang from historyEntry, not always 'fa'
+  $all('.history-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const histId = card.getAttribute('data-hist-id');
+      const h = history.find(x => x.id === histId);
+      if(h) openCertificateView(h.certData, h.lang || 'fa', false);
+    });
+  });
+}
+
+$('#logoutBtn').addEventListener('click', () => {
+  showToast('برای امنیت حساب، خروج غیرفعال است');
+});
+
+/* ===================== REDEEM FLOW ===================== */
+const digitBoxes = $all('.digit-box');
+
+/* BUG FIX #8: robust Persian/Arabic digit normalizer */
+function toEnglishDigits(str){
+  return String(str || '').replace(/[\u06F0-\u06F9\u0660-\u0669]/g, (ch) => {
+    const code = ch.charCodeAt(0);
+    // Persian ۰-۹ = U+06F0–U+06F9
+    if(code >= 0x06F0 && code <= 0x06F9) return String(code - 0x06F0);
+    // Arabic-Indic ٠-٩ = U+0660–U+0669
+    if(code >= 0x0660 && code <= 0x0669) return String(code - 0x0660);
+    return ch;
+  });
+}
+
+digitBoxes.forEach((box, idx) => {
+  box.addEventListener('input', () => {
+    /* BUG FIX #8: normalise BEFORE stripping; handles IME composition too */
+    let val = toEnglishDigits(box.value).replace(/[^0-9]/g,'');
+    if(val.length > 1){
+      const chars = val.split('');
+      chars.forEach((ch, i) => { if(digitBoxes[idx+i]) digitBoxes[idx+i].value = ch; });
+      const nextIdx = Math.min(idx + chars.length, digitBoxes.length - 1);
+      digitBoxes[nextIdx].focus();
+      return;
+    }
+    box.value = val;
+    if(box.value && idx < digitBoxes.length - 1){
+      digitBoxes[idx+1].focus();
+    }
+  });
+  box.addEventListener('keydown', (e) => {
+    if(e.key === 'Backspace' && !box.value && idx > 0){
+      digitBoxes[idx-1].value = '';
+      digitBoxes[idx-1].focus();
+    }
+    if(e.key === 'ArrowRight' && idx < digitBoxes.length - 1){ e.preventDefault(); digitBoxes[idx+1].focus(); }
+    if(e.key === 'ArrowLeft' && idx > 0){ e.preventDefault(); digitBoxes[idx-1].focus(); }
+    if(e.key === 'Enter') $('#redeemConfirmBtn').click();
+  });
+  box.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const raw = (e.clipboardData || window.clipboardData).getData('text') || '';
+    const text = toEnglishDigits(raw).replace(/[^0-9]/g,'').slice(0,6);
+    digitBoxes.forEach(b => b.value = '');
+    text.split('').forEach((ch,i) => { if(digitBoxes[i]) digitBoxes[i].value = ch; });
+    if(text.length){
+      const focusIdx = Math.min(text.length, 5);
+      digitBoxes[focusIdx].focus();
+    }
+  });
+  /* BUG FIX #8: on focus select all so user can overtype easily */
+  box.addEventListener('focus', () => box.select());
+});
+
+$('#fabBtn').addEventListener('click', () => {
+  $('#redeemModal').classList.remove('hidden');
+  digitBoxes.forEach(b => b.value = '');
+  $('#redeemMsg').textContent = '';
+  $('#redeemMsg').className = 'redeem-msg';
+  setTimeout(()=> digitBoxes[0].focus(), 100);
+});
+$('#redeemCancelBtn').addEventListener('click', () => {
+  $('#redeemModal').classList.add('hidden');
+});
+
+$('#redeemConfirmBtn').addEventListener('click', () => {
+  const code = digitBoxes.map(b => b.value).join('');
+  const msgEl = $('#redeemMsg');
+  if(code.length !== 6 || !/^\d{6}$/.test(code)){
+    msgEl.textContent = 'لطفاً هر ۶ رقم کد را وارد کنید';
+    msgEl.className = 'redeem-msg err';
+    return;
+  }
+
+  const certs = getCertificates();
+  const cert = certs.find(c => c.code === code);
+
+  if(!cert){
+    msgEl.textContent = 'کد وارد شده معتبر نیست';
+    msgEl.className = 'redeem-msg err';
+    return;
+  }
+  if(cert.used){
+    msgEl.textContent = 'این کد قبلاً استفاده شده است';
+    msgEl.className = 'redeem-msg err';
+    return;
+  }
+  if(cert.scheduledAt){
+    const activeTime = new Date(cert.scheduledAt).getTime();
+    if(Date.now() < activeTime){
+      msgEl.textContent = 'این کد هنوز فعال نشده است. لطفاً در زمان مقرر مراجعه کنید';
+      msgEl.className = 'redeem-msg err';
+      return;
+    }
+  }
+
+  msgEl.textContent = 'کد تایید شد ✓';
+  msgEl.className = 'redeem-msg ok';
+
+  cert.used = true;
+  cert.usedAt = nowIso();
+  saveCertificates(certs);
+
+  const user = getCurrentUser();
+  if(user){
+    /* BUG FIX #4 & #5: attach current user photo to cert if missing; build a safe courseTitle */
+    if(!cert.userPhoto) cert.userPhoto = user.photo;
+
+    const hist = getUserHistory(user.id);
+    const courseTitle = cert.lang ? ('گواهی ' + cert.lang) : 'گواهی دوره';
+    const historyEntry = {
+      id: uid(),
+      certData: cert,
+      lang: 'fa',           // default display lang
+      score: cert.score,
+      courseTitle: courseTitle,
+      downloadedAt: nowIso()
+    };
+    hist.push(historyEntry);
+    saveUserHistory(user.id, hist);
+    renderHistory(user.id);
+  }
+
+  setTimeout(() => {
+    $('#redeemModal').classList.add('hidden');
+    openCertificateView(cert, 'fa', true);
+  }, 500);
+});
+
+/* ===================== CERTIFICATE RENDER ===================== */
+let activeCertData = null;
+let activeCertLang = 'fa';
+
+function buildCertificateHTML(cert, lang){
+  const isFa = lang === 'fa';
+  const name = isFa ? (cert.nameFa || '') : (cert.nameEn || cert.nameFa || '');
+
+  /* BUG FIX #4: resolve photo — cert's own photo first, then current user's */
+  const cu = getCurrentUser();
+  const photo = cert.userPhoto || (cu && cu.photo) || '';
+
+  const courseLineFa = `دوره برنامه‌نویسی <span class="cert-course-name">${escapeHtml(cert.lang || '')}</span> را با موفقیت به پایان رسانده است`;
+  const courseLineEn = `has successfully completed the <span class="cert-course-name">${escapeHtml(cert.lang || '')}</span> programming course`;
+
+  const issuedFa = `بدین وسیله توسط <b>Code Studio</b> گواهی می‌شود`;
+  const issuedEn = `This is to certify, issued by <b>Code Studio</b>`;
+
+  const id = cert.code || '';
+  const createdAt = cert.createdAt || nowIso();
+  const dateFa = fmtDateFa(createdAt);
+  const dateEn = fmtDateEn(createdAt);
+
+  return `
+    <div class="cert-corner tl"><svg viewBox="0 0 34 34"><path d="M2 32V8a6 6 0 0 1 6-6h24" fill="none" stroke="#c9a24b" stroke-width="2"/></svg></div>
+    <div class="cert-corner tr"><svg viewBox="0 0 34 34"><path d="M2 32V8a6 6 0 0 1 6-6h24" fill="none" stroke="#c9a24b" stroke-width="2"/></svg></div>
+    <div class="cert-corner bl"><svg viewBox="0 0 34 34"><path d="M2 32V8a6 6 0 0 1 6-6h24" fill="none" stroke="#c9a24b" stroke-width="2"/></svg></div>
+    <div class="cert-corner br"><svg viewBox="0 0 34 34"><path d="M2 32V8a6 6 0 0 1 6-6h24" fill="none" stroke="#c9a24b" stroke-width="2"/></svg></div>
+    <div class="cert-watermark">CS</div>
+    <div class="cert-inner" dir="${isFa ? 'rtl' : 'ltr'}">
+      <div class="cert-brand">CODE STUDIO</div>
+      <div class="cert-brand-fa">${isFa ? 'گواهینامه تکمیل دوره' : 'CERTIFICATE OF COMPLETION'}</div>
+
+      <div class="cert-photo">${photo ? `<img src="${photo}" alt="">` : ''}</div>
+      <div class="cert-name">${escapeHtml(name)}</div>
+      <div class="cert-presented">${isFa ? 'این مدرک به نام فرد فوق صادر شده است' : 'This certificate is proudly presented to the above named individual'}</div>
+
+      <div class="cert-course-line">${isFa ? courseLineFa : courseLineEn}</div>
+      <div class="cert-issuer-line">${isFa ? issuedFa : issuedEn}</div>
+
+      <div class="cert-score-row">
+        <span class="cert-score-label">${isFa ? 'نمره نهایی' : 'Final Score'}</span>
+        <span class="cert-score-num">${cert.score != null ? cert.score : '—'} / 100</span>
+      </div>
+
+      <div class="cert-bottom-row">
+        <div class="cert-sig-block">
+          <div class="cert-sig-line">
+            <div class="cert-sig-name">Code Studio</div>
+            <div class="cert-sig-title">${isFa ? 'صادرکننده گواهی' : 'Issuing Authority'}</div>
+          </div>
+        </div>
+        <div class="cert-seal">
+          <div class="cert-seal-ring"></div>
+          <div class="cert-seal-inner">
+            <span class="s1">CS</span>
+            <span class="s2">${isFa ? 'تایید شده' : 'VERIFIED'}</span>
+          </div>
+        </div>
+        <div class="cert-sig-block">
+          <div class="cert-sig-line">
+            <div class="cert-sig-name">Amirhosein Naderi</div>
+            <div class="cert-sig-title">${isFa ? 'مدیر دوره' : 'Course Director'}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cert-id-row">ID: ${escapeHtml(id)}</div>
+    <div class="cert-date-row">${dateEn}</div>
+    <div class="cert-date-row-fa">${dateFa}</div>
+  `;
+}
+
+function openCertificateView(cert, lang, fromFab){
+  activeCertData = cert;
+  activeCertLang = lang || 'fa';
+  $('#certificateEl').innerHTML = buildCertificateHTML(cert, activeCertLang);
+  $('#certLangBtnText').textContent = activeCertLang === 'fa' ? 'English Version' : 'نسخه فارسی';
+  $('#certScreen').classList.remove('hidden');
+}
+
+$('#certBackBtn').addEventListener('click', () => {
+  $('#certScreen').classList.add('hidden');
+});
+$('#certLangBtn').addEventListener('click', () => {
+  activeCertLang = activeCertLang === 'fa' ? 'en' : 'fa';
+  $('#certificateEl').innerHTML = buildCertificateHTML(activeCertData, activeCertLang);
+  $('#certLangBtnText').textContent = activeCertLang === 'fa' ? 'English Version' : 'نسخه فارسی';
+});
+
+$('#certDownloadBtn').addEventListener('click', async () => {
+  const btn = $('#certDownloadBtn');
+  const original = btn.innerHTML;
+  btn.innerHTML = '<span class="spin" style="width:14px;height:14px;border-width:2px;display:inline-block;"></span> در حال آماده‌سازی...';
+  btn.disabled = true;
+  try{
+    await downloadCertificateAsImage();
+  }catch(e){
+    console.error(e);
+    showToast('خطا در دانلود مدرک');
+  }
+  btn.innerHTML = original;
+  btn.disabled = false;
+});
+
+/* BUG FIX #9: allowTaint:true so base64 images render; foreignObjectRendering:false for compat */
+async function downloadCertificateAsImage(){
+  const node = $('#certificateEl');
+
+  if(typeof html2canvas !== 'function'){
+    showToast('کتابخانه دانلود بارگزاری نشد، اتصال اینترنت را بررسی کنید');
+    return;
+  }
+
+  const canvas = await html2canvas(node, {
+    scale: 3,
+    backgroundColor: '#fdfbf6',
+    useCORS: true,
+    allowTaint: true,
+    foreignObjectRendering: false,
+    logging: false,
+    imageTimeout: 0
+  });
+
+  await new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if(!blob){ showToast('خطا در ساخت تصویر'); resolve(); return; }
+      const dlUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const nameRaw = (activeCertLang === 'fa' ? activeCertData.nameFa : (activeCertData.nameEn || activeCertData.nameFa)) || 'certificate';
+      a.href = dlUrl;
+      a.download = `CS-Degree-${nameRaw.replace(/\s+/g,'_')}-${activeCertLang}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=> URL.revokeObjectURL(dlUrl), 2000);
+      resolve();
+    }, 'image/png');
+  });
+
+  showToast('مدرک با موفقیت دانلود شد');
+}
+
+/* ===================== ADMIN PANEL ===================== */
+/* BUG FIX #7: hide appShell properly before showing admin */
+function enterAdminPanel(){
+  $('#appShell').classList.remove('active');
+  $('#onboardingScreen').classList.add('hidden');
+  $('#adminScreen').classList.remove('hidden');
+  // reset generate tab
+  $all('.admin-tab').forEach(t => t.classList.remove('active'));
+  $all('.admin-pane').forEach(p => p.classList.remove('active'));
+  document.querySelector('.admin-tab[data-tab="generate"]').classList.add('active');
+  $('#pane-generate').classList.add('active');
+  refreshAdminStats();
+  renderUsersList();
+  renderArchiveList();
+  populateUserSelect();
+}
+
+$('#adminExitBtn').addEventListener('click', () => {
+  $('#adminScreen').classList.add('hidden');
+  const user = getCurrentUser();
+  if(user){
+    enterMainApp(user);
+  } else {
+    $('#onboardingScreen').classList.remove('hidden');
+  }
+});
+
+$all('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $all('.admin-tab').forEach(t => t.classList.remove('active'));
+    $all('.admin-pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('#pane-' + tab.getAttribute('data-tab')).classList.add('active');
+  });
+});
+
+function refreshAdminStats(){
+  const users = getAllUsers();
+  const certs = getCertificates();
+  $('#statUsers').textContent = users.length;
+  $('#statCerts').textContent = certs.length;
+  $('#statPending').textContent = certs.filter(c => !c.used).length;
+}
+
+function populateUserSelect(){
+  const users = getAllUsers();
+  const sel = $('#genUserSelect');
+  sel.innerHTML = '<option value="">— بدون انتخاب، تایپ دستی —</option>' +
+    users.map(u => `<option value="${u.id}">${escapeHtml(u.firstNameFa + ' ' + u.lastNameFa)} (${escapeHtml(u.firstNameEn + ' ' + u.lastNameEn)})</option>`).join('');
+}
+
+$('#genUserSelect').addEventListener('change', (e) => {
+  const users = getAllUsers();
+  const u = users.find(x => x.id === e.target.value);
+  if(u){
+    $('#genNameFa').value = u.firstNameFa + ' ' + u.lastNameFa;
+    $('#genNameEn').value = u.firstNameEn + ' ' + u.lastNameEn;
+  }
+});
+
+/* BUG FIX #6: genForSelfBtn sets both name fields AND resolves userPhoto */
+$('#genForSelfBtn').addEventListener('click', () => {
+  const me = getCurrentUser();
+  if(!me){
+    showToast('ابتدا باید با تکمیل نام و تصویر پروفایل، حساب خود را ثبت کنید');
+    return;
+  }
+  // find and select in dropdown too
+  const all = getAllUsers();
+  const found = all.find(u => u.id === me.id);
+  if(found) $('#genUserSelect').value = found.id;
+
+  $('#genNameFa').value = me.firstNameFa + ' ' + me.lastNameFa;
+  $('#genNameEn').value = me.firstNameEn + ' ' + me.lastNameEn;
+  $('#genLang').focus();
+  showToast('اطلاعات شما در فرم پر شد');
+});
+
+$('#genScoreSlider').addEventListener('input', (e) => {
+  $('#genScoreDisplay').textContent = e.target.value;
+});
+
+let scheduleEnabled = false;
+$('#scheduleToggleWrap').addEventListener('click', () => {
+  scheduleEnabled = !scheduleEnabled;
+  $('#scheduleToggle').classList.toggle('on', scheduleEnabled);
+  $('#scheduleDateRow').classList.toggle('show', scheduleEnabled);
+});
+
+$('#generateBtn').addEventListener('click', () => {
+  const nameFa = $('#genNameFa').value.trim();
+  const nameEn = $('#genNameEn').value.trim();
+  const lang = $('#genLang').value.trim();
+  const score = parseInt($('#genScoreSlider').value, 10);
+
+  if(!nameFa || !lang){
+    showToast('نام کاربر و زبان برنامه‌نویسی الزامی است');
+    return;
+  }
+
+  let scheduledAt = null;
+  if(scheduleEnabled){
+    const d = $('#scheduleDate').value;
+    const t = $('#scheduleTime').value;
+    if(!d || !t){
+      showToast('برای زمان‌بندی، تاریخ و ساعت را وارد کنید');
+      return;
+    }
+    scheduledAt = new Date(d + 'T' + t).toISOString();
+  }
+
+  const btn = $('#generateBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const certs = getCertificates();
+    let code;
+    do { code = genSixDigit(); } while(certs.some(c => c.code === code));
+
+    const selectedUserId = $('#genUserSelect').value;
+    const selectedUser = getAllUsers().find(u => u.id === selectedUserId);
+
+    /* BUG FIX #6: always store the userPhoto from selectedUser (or current user if self) */
+    let userPhoto = null;
+    if(selectedUser){
+      userPhoto = selectedUser.photo;
+    } else {
+      const me = getCurrentUser();
+      if(me) userPhoto = me.photo;
+    }
+
+    const cert = {
+      id: uid(),
+      code,
+      nameFa,
+      nameEn,
+      lang,
+      score,
+      createdAt: nowIso(),
+      scheduledAt,
+      used: false,
+      userPhoto: userPhoto,
+      linkedUserId: selectedUserId || null
+    };
+    certs.push(cert);
+    saveCertificates(certs);
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    $('#generateResultCode').textContent = code;
+    $('#generateResultSub').textContent = scheduledAt
+      ? `این کد از تاریخ ${fmtDateFaShort(scheduledAt)} فعال می‌شود`
+      : 'این کد هم‌اکنون فعال است و قابل استفاده می‌باشد';
+    $('#generateResult').classList.add('show');
+
+    // reset form
+    $('#genNameFa').value = '';
+    $('#genNameEn').value = '';
+    $('#genLang').value = '';
+    $('#genUserSelect').value = '';
+    $('#genScoreSlider').value = 85;
+    $('#genScoreDisplay').textContent = 85;
+    scheduleEnabled = false;
+    $('#scheduleToggle').classList.remove('on');
+    $('#scheduleDateRow').classList.remove('show');
+
+    refreshAdminStats();
+    renderArchiveList();
+    showToast('کد مدرک با موفقیت تولید شد');
+  }, 550);
+});
+
+$('#copyCodeBtn').addEventListener('click', () => {
+  const code = $('#generateResultCode').textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=> showToast('کد کپی شد'));
+  } else {
+    showToast('کد: ' + code);
+  }
+});
+
+function renderArchiveList(){
+  const certs = getCertificates().slice().reverse();
+  const container = $('#archiveList');
+  if(certs.length === 0){
+    container.innerHTML = '<div class="admin-empty">هنوز هیچ مدرکی تولید نشده است</div>';
+    return;
+  }
+  container.innerHTML = certs.map(c => {
+    let statusHtml;
+    if(c.used){
+      statusHtml = `<span class="archive-status used">استفاده شده</span>`;
+    } else if(c.scheduledAt && new Date(c.scheduledAt).getTime() > Date.now()){
+      statusHtml = `<span class="archive-status scheduled">زمان‌بندی شده</span>`;
+    } else {
+      statusHtml = `<span class="archive-status pending">فعال — استفاده نشده</span>`;
+    }
+    const initial = (c.nameFa || '?').trim().charAt(0);
+    return `
+    <div class="archive-card">
+      <div class="archive-icon">${escapeHtml(initial)}</div>
+      <div class="archive-info">
+        <div class="archive-name">${escapeHtml(c.nameFa || '')}${c.nameEn ? ' · ' + escapeHtml(c.nameEn) : ''}</div>
+        <div class="archive-meta">
+          <span>کد: ${escapeHtml(c.code)}</span>
+          <span>${escapeHtml(c.lang || '—')}</span>
+          <span>نمره ${c.score != null ? c.score : '—'}</span>
+          <span>${fmtDateFaShort(c.createdAt)}</span>
+        </div>
+      </div>
+      ${statusHtml}
+    </div>`;
+  }).join('');
+}
+
+function renderUsersList(){
+  const users = getAllUsers().slice().reverse();
+  const container = $('#usersList');
+  if(users.length === 0){
+    container.innerHTML = '<div class="admin-empty">هنوز هیچ کاربری وارد سایت نشده است</div>';
+    return;
+  }
+  container.innerHTML = users.map(u => `
+    <div class="user-row" data-user-id="${u.id}">
+      <div class="user-row-avatar"><img src="${u.photo}" alt=""></div>
+      <div class="user-row-info">
+        <div class="user-row-name">${escapeHtml(u.firstNameFa + ' ' + u.lastNameFa)} <span class="en">${escapeHtml(u.firstNameEn + ' ' + u.lastNameEn)}</span></div>
+        <div class="user-row-date">عضویت: ${fmtDateFa(u.joinedAt)}</div>
+      </div>
+      <svg class="user-row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  `).join('');
+
+  $all('.user-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const userId = row.getAttribute('data-user-id');
+      const u = getAllUsers().find(x => x.id === userId);
+      if(!u) return;
+      $all('.admin-tab').forEach(t => t.classList.remove('active'));
+      $all('.admin-pane').forEach(p => p.classList.remove('active'));
+      document.querySelector('.admin-tab[data-tab="generate"]').classList.add('active');
+      $('#pane-generate').classList.add('active');
+      $('#genUserSelect').value = u.id;
+      $('#genNameFa').value = u.firstNameFa + ' ' + u.lastNameFa;
+      $('#genNameEn').value = u.firstNameEn + ' ' + u.lastNameEn;
+      $('#genLang').focus();
+      showToast('فرم برای این کاربر آماده شد');
+    });
+  });
+}
+
+/* ===================== ADMIN RE-ENTRY (5-tap on title) ===================== */
+/* BUG FIX #2: fixed tap detection — was unreliable due to CSS position conflict on topbar */
+let titleTapCount = 0;
+let titleTapTimer = null;
+$('#topbarTitle').addEventListener('click', (e) => {
+  const user = getCurrentUser();
+  if(!user || user.firstNameFa !== ADMIN_TRIGGER_FIRST_FA || user.lastNameFa !== ADMIN_TRIGGER_LAST_FA){
+    return;
+  }
+  titleTapCount++;
+  clearTimeout(titleTapTimer);
+  titleTapTimer = setTimeout(() => { titleTapCount = 0; }, 1500);
+  if(titleTapCount >= 5){
+    titleTapCount = 0;
+    openAdminModal();
+  }
+});
+
+/* ===================== BOOTSTRAP ===================== */
+async function bootstrap(){
+  // Wait for Firestore (with a safety timeout so the app still works offline / if blocked)
+  await Promise.race([
+    new Promise(resolve => {
+      if(window.__csdFirebase){ resolve(); }
+      else { window.addEventListener('csd-firebase-ready', resolve, { once:true }); }
+    }),
+    new Promise(resolve => setTimeout(resolve, 4000))
+  ]);
+  await __fbPullAll();
+
+  const user = getCurrentUser();
+  if(user){
+    $('#onboardingScreen').classList.add('hidden');
+    $('#appShell').classList.add('active');
+    const avatarImg = `<img src="${user.photo}" alt="">`;
+    $('#topbarAvatar').innerHTML = avatarImg;
+    $('#welcomeAvatar').innerHTML = avatarImg;
+    $('#welcomeName').textContent = user.firstNameFa + ' ' + user.lastNameFa;
+    renderHistory(user.id);
+  }
+}
+bootstrap();
+
+})();
+</script>
+</body>
+</html>
